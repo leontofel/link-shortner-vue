@@ -33,7 +33,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "frontend/dist/spa/*"
+          source: "dist/spa/*"
           target: "/opt/shortner-link/frontend"
 
       - name: Reload Nginx
