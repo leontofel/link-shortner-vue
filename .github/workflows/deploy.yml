@@ -20,13 +20,11 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: |
-          cd frontend
+        run:
           npm ci
 
       - name: Build Quasar app
-        run: |
-          cd frontend
+        run:
           npx quasar build
 
       - name: Upload build to VPS
