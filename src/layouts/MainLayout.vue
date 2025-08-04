@@ -1,81 +1,77 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+  <q-layout view="hHh lpR fFf">
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+    <!-- Menu lateral (drawer) -->
+    <q-drawer v-model="drawer" show-if-above bordered>
+      <q-list padding>
+        <q-item-label header class="text-primary">
+          {{ t('menu.solutions') }}
+        </q-item-label>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+        <q-item clickable v-ripple>
+          <q-item-section avatar><q-icon name="link" /></q-item-section>
+          <q-item-section>{{ t('menu.shortener') }}</q-item-section>
+        </q-item>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
+        <q-item clickable v-ripple>
+          <q-item-section avatar><q-icon name="analytics" /></q-item-section>
+          <q-item-section>{{ t('menu.dashboard') }}</q-item-section>
+        </q-item>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <q-item clickable v-ripple>
+          <q-item-section avatar><q-icon name="shield" /></q-item-section>
+          <q-item-section>{{ t('menu.firewall') }}</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar><q-icon name="manage_accounts" /></q-item-section>
+          <q-item-section>{{ t('menu.access') }}</q-item-section>
+        </q-item>
+
+        <q-item clickable v-ripple>
+          <q-item-section avatar><q-icon name="layers" /></q-item-section>
+          <q-item-section>{{ t('menu.integrations') }}</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
+    <!-- Topo -->
+    <q-header elevated class="bg-primary text-white">
+      <q-toolbar>
+        <q-btn flat dense round icon="menu" @click="drawer = !drawer" aria-label="Menu" />
+        <q-toolbar-title>
+          {{ t('header.title') }}
+        </q-toolbar-title>
+        <q-btn
+          flat
+          dense
+          round
+          icon="open_in_new"
+          href="https://www.sparkintech.com"
+          target="_blank"
+          aria-label="Site institucional"
+        />
+      </q-toolbar>
+    </q-header>
+
+    <!-- Página principal -->
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!-- Rodapé -->
+    <q-footer class="bg-grey-2 text-grey-9 text-center q-pa-sm">
+      <div class="text-caption">
+        &copy; {{ new Date().getFullYear() }} SparkInTech — {{ t('footer.rights') }}
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+const drawer = ref(false)
+const { t } = useI18n()
 </script>

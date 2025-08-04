@@ -1,43 +1,72 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="q-pa-md flex flex-center bg-grey-1">
+    <q-card class="q-pa-lg" style="max-width: 600px; width: 100%" flat bordered>
+      <q-card-section>
+        <div class="text-h5 text-primary text-center">{{ t('title') }}</div>
+        <div class="text-subtitle2 text-center text-grey">
+          by <a href="https://www.sparkintech.com" class="text-primary" target="_blank">SparkInTech</a>
+        </div>
+      </q-card-section>
+
+      <q-card-section>
+        <q-form @submit.prevent="shortenUrl">
+          <q-input
+            v-model="originalUrl"
+            :label="t('placeholder')"
+            outlined
+            dense
+            type="url"
+            :rules="[val => !!val || t('validation.required')]"
+            placeholder="https://example.com"
+            autofocus
+          >
+            <template #prepend>
+              <q-icon name="link" />
+            </template>
+          </q-input>
+
+          <q-btn
+            class="full-width q-mt-md"
+            color="primary"
+            icon="bolt"
+            type="submit"
+            :label="t('shorten')"
+          />
+        </q-form>
+
+        <q-banner
+          v-if="shortUrl"
+          class="q-mt-lg bg-green-2 text-green-10"
+          rounded
+          dense
+        >
+          {{ t('result') }}:
+          <a :href="shortUrl" target="_blank" class="text-primary q-ml-xs">{{ shortUrl }}</a>
+        </q-banner>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { api } from 'boot/axios'
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1',
-  },
-  {
-    id: 2,
-    content: 'ct2',
-  },
-  {
-    id: 3,
-    content: 'ct3',
-  },
-  {
-    id: 4,
-    content: 'ct4',
-  },
-  {
-    id: 5,
-    content: 'ct5',
-  },
-]);
+const { t } = useI18n()
+const originalUrl = ref('')
+const shortUrl = ref('')
 
-const meta = ref<Meta>({
-  totalCount: 1200,
-});
+const shortenUrl = async () => {
+  try {
+    const trimmedUrl = originalUrl.value.trim()
+    if (!trimmedUrl) return
+
+    const res = await api.post('/shorten', { url: trimmedUrl })
+    shortUrl.value = res.data.short_url
+  } catch (error) {
+    shortUrl.value = ''
+    console.error(error)
+  }
+}
 </script>
