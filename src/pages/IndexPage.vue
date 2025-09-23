@@ -49,24 +49,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { api } from 'boot/axios'
+import { useLinkShortnerStore } from 'src/stores/link-shortner'
 
 const { t } = useI18n()
-const originalUrl = ref('')
-const shortUrl = ref('')
-
-const shortenUrl = async () => {
-  try {
-    const trimmedUrl = originalUrl.value.trim()
-    if (!trimmedUrl) return
-
-    const res = await api.post('/shorten', { url: trimmedUrl })
-    shortUrl.value = res.data.short_url
-  } catch (error) {
-    shortUrl.value = ''
-    console.error(error)
-  }
-}
+const { shortUrl, originalUrl, shortenUrl } = useLinkShortnerStore()
 </script>
