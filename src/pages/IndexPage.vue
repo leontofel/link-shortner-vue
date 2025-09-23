@@ -9,7 +9,7 @@
       </q-card-section>
 
       <q-card-section>
-        <q-form @submit.prevent="shortenUrl">
+        <q-form @submit.prevent="store.shortenUrl">
           <q-input
             v-model="originalUrl"
             :label="t('placeholder')"
@@ -51,7 +51,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useLinkShortnerStore } from 'src/stores/link-shortner'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
-const { shortUrl, originalUrl, shortenUrl } = useLinkShortnerStore()
+const store = useLinkShortnerStore()
+const { originalUrl, shortUrl } = storeToRefs(store)
 </script>
